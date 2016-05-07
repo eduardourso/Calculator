@@ -76,7 +76,8 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
     }
 
     private func evaluate() -> Double? {
-        let (result, _) = evaluate(optStack)
+        let (result, remainder) = evaluate(optStack)
+        print("\(optStack) = \(result) with \(remainder) left over")
         return result
     }
 
