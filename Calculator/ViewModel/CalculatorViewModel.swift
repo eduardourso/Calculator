@@ -1,4 +1,6 @@
 import Foundation
+import RxSwift
+import RxCocoa
 
 struct CalculatorViewModel : CalculatorOperationsProtocol {
 
@@ -10,7 +12,9 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         case SquareRoot
     }
 
-    var displayText: String = "0"
+    var displayText = "0"
+//    var operationDescriptionText = "0"
+//    let observable:Observable<String> = Observable()
     private var optStack = [Op]()
     private var knownOps = [Operation:Op]()
     private var userIsTypingNumber: Bool = false
@@ -29,7 +33,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         knownOps[.Division] = Op.BinaryOperation("/") {$1 / $0}
         knownOps[.Subtraction] = Op.BinaryOperation("-") {$1 - $0}
         knownOps[.Addition] = Op.BinaryOperation("+", +)
-        knownOps[.SquareRoot] = Op.UnaryOperation("", sqrt)
+        knownOps[.SquareRoot] = Op.UnaryOperation("√", sqrt)
     }
 
     mutating func appendNumber(number: String) {
@@ -50,6 +54,11 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
             //todo display value it's gonna be optional
             self.displayValue = 0
         }
+//        let disposableBag = DisposeBag()
+//        observable.observeOn(MainScheduler.instance)
+//        .subscribeNext ({ (text) in
+//            self.operationDescriptionText = "\(self.optStack)"
+//        }).addDisposableTo(disposableBag)
     }
 
     mutating func calculate(operation: Operation) {
@@ -61,6 +70,8 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         } else {
             self.displayValue = 0
         }
+
+//        operationDescriptionText.startWith("\(optStack)")
     }
 
     mutating func pushOperand(operand: Double) -> Double? {
@@ -81,7 +92,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         return result
     }
 
-    mutating func addDotToNumber(string: String) -> String {
+    mutating func addDotToDisplayText(string: String) -> String {
         if (self.displayText.characters.count == 0) {
             self.displayText = "0."
         }
@@ -91,5 +102,11 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
             }
         }
         return self.displayText
+    }
+
+    mutating func reset() {
+        self.userIsTypingNumber = false
+        self.optStack.removeAll()
+        self.displayValue = 0
     }
 }
