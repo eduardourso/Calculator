@@ -55,7 +55,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
     mutating func calculate(operation: Operation) {
         if self.userIsTypingNumber {
             self.enter()
-        }
+        }   
         if let result = performOperation(operation) {
             self.displayValue = result
         } else {
@@ -75,7 +75,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         return evaluate()
     }
 
-    private func evaluate() -> Double? {
+    private mutating func evaluate() -> Double? {
         let (result, remainder) = evaluate(optStack)
         print("\(optStack) = \(result) with \(remainder) left over")
         return result

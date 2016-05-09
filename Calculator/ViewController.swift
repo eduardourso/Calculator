@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var squareRootButton: UIButton!
 
 
-    private let calculator = CalculatorViewModel()
+    private var calculator = CalculatorViewModel()
     private let disposableBag = DisposeBag()
 
     override func viewDidLoad() {

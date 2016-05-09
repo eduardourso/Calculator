@@ -37,7 +37,7 @@ extension CalculatorOperationsProtocol {
             case .UnaryOperation(_, let operation):
                 let operandEvaluation = evaluate(remainingOps)
                 if let operand = operandEvaluation.result {
-                    return (operation(operand), remainingOps)
+                    return (operation(operand), operandEvaluation.remainingOps)
                 }
             case .BinaryOperation(_, let operation):
                 let operandEvaluation1 = evaluate(remainingOps)
