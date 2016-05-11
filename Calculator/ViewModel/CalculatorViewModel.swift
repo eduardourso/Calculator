@@ -15,7 +15,8 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
     var displayText = "0"
 //    var operationDescriptionText = "0"
 //    let observable:Observable<String> = Observable()
-    private var optStack = [Op]()
+     var optStack = [Op]()
+    let optStackSubject: BehaviorSubject<[Op]> = BehaviorSubject(value: [])
     private var knownOps = [Operation:Op]()
     private var userIsTypingNumber: Bool = false
     private var displayValue: Double {
@@ -76,12 +77,14 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
 
     mutating func pushOperand(operand: Double) -> Double? {
         self.optStack.append(Op.Operand(operand))
+        self.optStackSubject.onNext(self.optStack)
         return evaluate()
     }
 
     mutating private func performOperation(symbol: Operation) -> Double? {
         if let operation = knownOps[symbol] {
             self.optStack.append(operation)
+            self.optStackSubject.onNext(self.optStack)
         }
         return evaluate()
     }

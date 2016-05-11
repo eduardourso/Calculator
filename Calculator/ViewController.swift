@@ -63,9 +63,9 @@ class ViewController: UIViewController {
             self?.updateDisplay(self?.calculator.displayText)
         }).addDisposableTo(self.disposableBag)
 
-//        self.calculator.operationDescriptionText.subscribeNext ({ (text) in
-//            self.operationDescriptionLabel.rx_text.onNext(text)
-//        }).addDisposableTo(self.disposableBag)
+        self.calculator.optStackSubject.asObservable().subscribeNext ({ (array) in
+            self.operationDescriptionLabel.text = "\(array)"
+        }).addDisposableTo(self.disposableBag)
 
     }
 
