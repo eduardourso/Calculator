@@ -13,9 +13,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
     }
 
     var displayText = "0"
-//    var operationDescriptionText = "0"
-//    let observable:Observable<String> = Observable()
-     var optStack = [Op]()
+    var optStack = [Op]()
     let optStackSubject: BehaviorSubject<[Op]> = BehaviorSubject(value: [])
     private var knownOps = [Operation:Op]()
     private var userIsTypingNumber: Bool = false
@@ -55,11 +53,6 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
             //todo display value it's gonna be optional
             self.displayValue = 0
         }
-//        let disposableBag = DisposeBag()
-//        observable.observeOn(MainScheduler.instance)
-//        .subscribeNext ({ (text) in
-//            self.operationDescriptionText = "\(self.optStack)"
-//        }).addDisposableTo(disposableBag)
     }
 
     mutating func calculate(operation: Operation) {
@@ -71,8 +64,6 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         } else {
             self.displayValue = 0
         }
-
-//        operationDescriptionText.startWith("\(optStack)")
     }
 
     mutating func pushOperand(operand: Double) -> Double? {
@@ -110,6 +101,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
     mutating func reset() {
         self.userIsTypingNumber = false
         self.optStack.removeAll()
+        self.optStackSubject.onNext(self.optStack)
         self.displayValue = 0
     }
 }
