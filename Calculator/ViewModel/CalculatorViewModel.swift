@@ -22,7 +22,11 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
             return NSNumberFormatter().numberFromString(self.displayText)!.doubleValue
         }
         set {
-            self.displayText = "\(newValue)"
+            if floor(newValue) == newValue {
+               self.displayText = "\(Int(newValue))"
+            } else {
+                self.displayText = "\(newValue)"
+            }
             self.userIsTypingNumber = false
         }
     }
@@ -103,5 +107,6 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         self.optStack.removeAll()
         self.optStackSubject.onNext(self.optStack)
         self.displayValue = 0
+        self.displayText = "0"
     }
 }
