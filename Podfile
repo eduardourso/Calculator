@@ -1,0 +1,14 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '8.0'
+# Uncomment this line if you're using Swift
+use_frameworks!
+
+target 'Calculator' do
+  pod 'RxSwift',    '~> 2.0'
+  pod 'RxCocoa',    '~> 2.0'
+end
+
+target 'CalculatorTests' do
+  pod 'RxBlocking', '~> 2.0'
+  pod 'RxTests',    '~> 2.0'
+end
