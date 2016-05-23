@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0BR-iI-VSD">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="0BR-iI-VSD">
                                 <rect key="frame" x="5" y="28" width="590" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="Sjm-c3-v2f"/>
@@ -421,12 +421,14 @@
                     <connections>
                         <outlet property="additionButton" destination="Bb9-t9-Kte" id="AqA-VN-4x9"/>
                         <outlet property="clearButton" destination="RMi-gd-zzi" id="2vU-TG-V0w"/>
+                        <outlet property="cosButton" destination="SDp-fy-9FQ" id="4NP-W1-7Wf"/>
                         <outlet property="displayLabel" destination="0BR-iI-VSD" id="Wkm-Yd-AWt"/>
                         <outlet property="divisionButton" destination="7TY-Dd-cnH" id="GXf-LW-0Jk"/>
                         <outlet property="dotButton" destination="TTW-9M-gHg" id="2be-CE-x5h"/>
                         <outlet property="enterButton" destination="OqT-9I-nVg" id="D4q-SY-va7"/>
                         <outlet property="multiplicationButton" destination="jrc-u5-tS2" id="ViX-P6-Dfi"/>
                         <outlet property="operationDescriptionLabel" destination="FjS-pK-mah" id="LWJ-un-5Hz"/>
+                        <outlet property="sinButton" destination="okH-jC-q0W" id="niO-ML-4Gc"/>
                         <outlet property="squareRootButton" destination="NEJ-Fb-GcY" id="zUR-iX-4ec"/>
                         <outlet property="subtractionButton" destination="Rab-av-fUh" id="80X-F6-TtC"/>
                     </connections>

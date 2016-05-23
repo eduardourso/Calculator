@@ -10,6 +10,8 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         case Multiplication
         case Division
         case SquareRoot
+        case Sin
+        case Cos
     }
 
     var displayText = "0"
@@ -37,6 +39,8 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         knownOps[.Subtraction] = Op.BinaryOperation("-") {$1 - $0}
         knownOps[.Addition] = Op.BinaryOperation("+", +)
         knownOps[.SquareRoot] = Op.UnaryOperation("√", sqrt)
+        knownOps[.Sin] = Op.UnaryOperation("sin", sin)
+        knownOps[.Cos] = Op.UnaryOperation("cos", cos)
     }
 
     mutating func appendNumber(number: String) {
