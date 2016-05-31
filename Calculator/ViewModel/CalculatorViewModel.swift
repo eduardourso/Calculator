@@ -1,6 +1,6 @@
 import Foundation
 
-struct CalculatorViewModel : CalculatorOperationsProtocol {
+class CalculatorViewModel : CalculatorOperationsProtocol {
 
     enum Operation {
         case Addition
@@ -32,7 +32,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         knownOps[.SquareRoot] = Op.UnaryOperation("", sqrt)
     }
 
-    mutating func appendNumber(number: String) {
+    func appendNumber(number: String) {
         if self.userIsTypingNumber {
             self.displayText = self.displayText + number
         } else {
@@ -41,7 +41,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         }
     }
 
-    mutating func enter() {
+    func enter() {
         self.userIsTypingNumber = false
 
         if let result = pushOperand(self.displayValue) {
@@ -52,7 +52,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         }
     }
 
-    mutating func calculate(operation: Operation) {
+    func calculate(operation: Operation) {
         if self.userIsTypingNumber {
             self.enter()
         }   
@@ -63,25 +63,25 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         }
     }
 
-    mutating func pushOperand(operand: Double) -> Double? {
+    func pushOperand(operand: Double) -> Double? {
         self.optStack.append(Op.Operand(operand))
         return evaluate()
     }
 
-    mutating private func performOperation(symbol: Operation) -> Double? {
+    private func performOperation(symbol: Operation) -> Double? {
         if let operation = knownOps[symbol] {
             self.optStack.append(operation)
         }
         return evaluate()
     }
 
-    private mutating func evaluate() -> Double? {
+    private func evaluate() -> Double? {
         let (result, remainder) = evaluate(optStack)
         print("\(optStack) = \(result) with \(remainder) left over")
         return result
     }
 
-    mutating func addDotToNumber(string: String) -> String {
+    func addDotToNumber(string: String) -> String {
         if (self.displayText.characters.count == 0) {
             self.displayText = "0."
         }
