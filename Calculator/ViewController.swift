@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var squareRootButton: UIButton!
     @IBOutlet weak var cosButton: UIButton!
     @IBOutlet weak var sinButton: UIButton!
+    @IBOutlet weak var piButton: UIButton!
     //Action buttons
     @IBOutlet weak var enterButton: UIButton!
     @IBOutlet weak var dotButton: UIButton!
@@ -63,6 +64,11 @@ class ViewController: UIViewController {
             self?.calculator.calculate(.Cos)
             self?.updateDisplay(self?.calculator.displayText)
             }).addDisposableTo(self.disposableBag)
+        
+        self.piButton.rx_tap.subscribeNext ({ [weak self] _ in
+            self?.calculator.calculate(.Pi)
+            self?.updateDisplay(self?.calculator.displayText)
+        }).addDisposableTo(self.disposableBag)
         
         self.dotButton.rx_tap.subscribeNext({ [weak self] _ in
             if let text = self?.displayLabel.text {

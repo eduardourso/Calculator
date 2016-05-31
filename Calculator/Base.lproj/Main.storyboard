@@ -428,6 +428,7 @@
                         <outlet property="enterButton" destination="OqT-9I-nVg" id="D4q-SY-va7"/>
                         <outlet property="multiplicationButton" destination="jrc-u5-tS2" id="ViX-P6-Dfi"/>
                         <outlet property="operationDescriptionLabel" destination="FjS-pK-mah" id="LWJ-un-5Hz"/>
+                        <outlet property="piButton" destination="Jn6-wF-ZhA" id="5JJ-8c-okt"/>
                         <outlet property="sinButton" destination="okH-jC-q0W" id="niO-ML-4Gc"/>
                         <outlet property="squareRootButton" destination="NEJ-Fb-GcY" id="zUR-iX-4ec"/>
                         <outlet property="subtractionButton" destination="Rab-av-fUh" id="80X-F6-TtC"/>

@@ -12,6 +12,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         case SquareRoot
         case Sin
         case Cos
+        case Pi
     }
 
     var displayText = "0"
@@ -41,6 +42,7 @@ struct CalculatorViewModel : CalculatorOperationsProtocol {
         knownOps[.SquareRoot] = Op.UnaryOperation("√", sqrt)
         knownOps[.Sin] = Op.UnaryOperation("sin", sin)
         knownOps[.Cos] = Op.UnaryOperation("cos", cos)
+        knownOps[.Pi] = Op.EmptyOperation("π", M_PI)
     }
 
     mutating func appendNumber(number: String) {
