@@ -6,10 +6,14 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var displayLabel: UILabel!
     @IBOutlet weak var enterButton: UIButton!
+    @IBOutlet weak var dotButton: UIButton!
+    //Operation buttons
     @IBOutlet weak var additionButton: UIButton!
     @IBOutlet weak var subtractionButton: UIButton!
     @IBOutlet weak var divisionButton: UIButton!
     @IBOutlet weak var multiplicationButton: UIButton!
+    @IBOutlet weak var squareRootButton: UIButton!
+
 
     private var calculator = CalculatorViewModel()
     private let disposableBag = DisposeBag()
@@ -39,6 +43,17 @@ class ViewController: UIViewController {
         self.multiplicationButton.rx_tap.subscribeNext({[weak self] _ in
             self?.calculator.calculate(.Multiplication)
             self?.updateDisplay(self?.calculator.displayText)
+            }).addDisposableTo(self.disposableBag)
+
+        self.squareRootButton.rx_tap.subscribeNext ({ [weak self] _ in
+
+            self?.calculator.calculate(.SquareRoot)
+            self?.updateDisplay(self?.calculator.displayText)
+        }).addDisposableTo(self.disposableBag)
+
+        self.dotButton.rx_tap.subscribeNext({ [weak self] in
+            self?.updateDisplay(self?.calculator.addDotToNumber((self?.displayLabel.text!)!))
+
             }).addDisposableTo(self.disposableBag)
     }
 

@@ -1,29 +1,54 @@
 import Foundation
 
-enum Operation {
-    case Addition
-    case Subtraction
-    case Multiplication
-    case Division
+enum Op : CustomStringConvertible {
+    case Operand(Double)
+    case UnaryOperation(String, Double -> Double)
+    case BinaryOperation(String, (Double, Double) -> Double)
+
+    var description: String {
+        get {
+            switch self {
+            case .Operand(let operand):
+                return "\(operand)"
+            case .UnaryOperation(let symbol, _):
+                return symbol
+            case .BinaryOperation(let symbol, _):
+                return symbol
+            }
+        }
+    }
 }
 
 protocol CalculatorOperationsProtocol {
-    func operate(opt1: Double, opt2: Double, operation: Operation) -> Double
+
+    func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Op])
 }
 
 extension CalculatorOperationsProtocol {
 
-    func operate(opt1: Double, opt2: Double, operation: Operation) -> Double {
+    func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Op]) {
 
-        switch operation {
-        case .Addition:
-            return (opt1 + opt2)
-        case .Subtraction:
-            return (opt2 - opt1)
-        case .Multiplication:
-            return (opt1 * opt2)
-        case .Division:
-            return (opt2 / opt1)
+        if !ops.isEmpty {
+            var remainingOps = ops
+            let op = remainingOps.removeLast()
+            switch op {
+            case .Operand(let operand):
+                return (operand, remainingOps)
+            case .UnaryOperation(_, let operation):
+                let operandEvaluation = evaluate(remainingOps)
+                if let operand = operandEvaluation.result {
+                    return (operation(operand), operandEvaluation.remainingOps)
+                }
+            case .BinaryOperation(_, let operation):
+                let operandEvaluation1 = evaluate(remainingOps)
+                if let operand1 = operandEvaluation1.result {
+                    let operandEvaluation2 = evaluate(operandEvaluation1.remainingOps)
+                    if let operand2 = operandEvaluation2.result {
+                        return (operation(operand1, operand2), operandEvaluation2.remainingOps)
+                    }
+                }
+            }
         }
+        return(nil, ops)
     }
 }
