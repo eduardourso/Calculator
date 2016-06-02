@@ -102,7 +102,7 @@ class CalculatorViewModel : CalculatorOperationsProtocol {
         return self.displayText
     }
 
-    mutating func reset() {
+    func reset() {
         self.userIsTypingNumber = false
         self.optStack.removeAll()
         self.optStackSubject.onNext(self.optStack)

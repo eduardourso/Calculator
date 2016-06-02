@@ -54,7 +54,7 @@ class ViewController: UIViewController {
 
         self.dotButton.rx_tap.subscribeNext({ [weak self] _ in
             if let text = self?.displayLabel.text {
-                self?.updateDisplay(self?.calculator.addDotToDisplayText(text))
+                self?.updateDisplay(self?.calculator.addDotToNumber(text))
             }
             }).addDisposableTo(self.disposableBag)
 
