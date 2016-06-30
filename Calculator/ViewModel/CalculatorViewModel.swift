@@ -1,25 +1,32 @@
 import Foundation
+import RxSwift
+import RxCocoa
 
-class CalculatorViewModel : CalculatorOperationsProtocol {
+public class CalculatorViewModel : CalculatorOperationsProtocol {
 
-    enum Operation {
+    public enum Operation {
         case Addition
         case Subtraction
         case Multiplication
         case Division
         case SquareRoot
     }
-
-    var displayText: String = "0"
-    private var optStack = [Op]()
+    
+    private let displayText: BehaviorSubject<String> = BehaviorSubject(value: "")
+    private let optStackSubject: BehaviorSubject<[Op]> = BehaviorSubject(value: [])
     private var knownOps = [Operation:Op]()
     private var userIsTypingNumber: Bool = false
     private var displayValue: Double {
         get {
-            return NSNumberFormatter().numberFromString(self.displayText)!.doubleValue
+            
+            return NSNumberFormatter().numberFromString(displayTextString())!.doubleValue
         }
         set {
-            self.displayText = "\(newValue)"
+            if floor(newValue) == newValue {
+               self.displayText.onNext("\(Int(newValue))")
+            } else {
+                self.displayText.onNext("\(newValue)")
+            }
             self.userIsTypingNumber = false
         }
     }
@@ -29,14 +36,14 @@ class CalculatorViewModel : CalculatorOperationsProtocol {
         knownOps[.Division] = Op.BinaryOperation("/") {$1 / $0}
         knownOps[.Subtraction] = Op.BinaryOperation("-") {$1 - $0}
         knownOps[.Addition] = Op.BinaryOperation("+", +)
-        knownOps[.SquareRoot] = Op.UnaryOperation("", sqrt)
+        knownOps[.SquareRoot] = Op.UnaryOperation("√", sqrt)
     }
 
     func appendNumber(number: String) {
         if self.userIsTypingNumber {
-            self.displayText = self.displayText + number
+            self.displayText.onNext(displayTextString() + number)
         } else {
-            self.displayText = number
+            self.displayText.onNext(number)
             self.userIsTypingNumber = true
         }
     }
@@ -64,32 +71,65 @@ class CalculatorViewModel : CalculatorOperationsProtocol {
     }
 
     func pushOperand(operand: Double) -> Double? {
-        self.optStack.append(Op.Operand(operand))
+        self.optStackSubject.onNext(optStackSubjectArray() + Op.Operand(operand))
         return evaluate()
     }
 
     private func performOperation(symbol: Operation) -> Double? {
         if let operation = knownOps[symbol] {
-            self.optStack.append(operation)
+            self.optStackSubject.onNext(optStackSubjectArray() + operation)
         }
         return evaluate()
     }
 
     private func evaluate() -> Double? {
-        let (result, remainder) = evaluate(optStack)
-        print("\(optStack) = \(result) with \(remainder) left over")
+        let (result, remainder) = evaluate(optStackSubjectArray())
+        print("\(optStackSubjectArray()) = \(result) with \(remainder) left over")
         return result
     }
 
     func addDotToNumber(string: String) -> String {
-        if (self.displayText.characters.count == 0) {
-            self.displayText = "0."
+        if (displayTextString().characters.count == 0) {
+            self.displayText.onNext("0.")
         }
         else {
-            if self.displayText.rangeOfString(".") == nil{
-                self.displayText = self.displayText + "."
+            if displayTextString().rangeOfString(".") == nil{
+                self.displayText.onNext(displayTextString() + ".")
             }
         }
-        return self.displayText
+        return displayTextString()
     }
+
+    func reset() {
+        self.userIsTypingNumber = false
+        self.optStackSubject.onNext([])
+        self.displayValue = 0
+        self.displayText.onNext("0")
+    }
+    
+    func observableOptStack() -> Observable<[Op]> {
+        return optStackSubject.asObservable()
+    }
+    
+    func displayTextString() -> String {
+        do {
+            let displayTextString = try displayText.value()
+            return displayTextString
+        } catch {
+            return ""
+        }
+    }
+    
+    func optStackSubjectArray() -> [Op] {
+        do {
+            let array = try optStackSubject.value()
+            return array
+        } catch {
+            return []
+        }
+    }
+}
+
+func +<T>(a :[T], b :T) -> [T] {
+    return a + [b]
 }

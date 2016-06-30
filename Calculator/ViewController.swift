@@ -5,15 +5,17 @@ import RxCocoa
 class ViewController: UIViewController {
 
     @IBOutlet weak var displayLabel: UILabel!
-    @IBOutlet weak var enterButton: UIButton!
-    @IBOutlet weak var dotButton: UIButton!
+    @IBOutlet weak var operationDescriptionLabel: UILabel!
     //Operation buttons
     @IBOutlet weak var additionButton: UIButton!
     @IBOutlet weak var subtractionButton: UIButton!
     @IBOutlet weak var divisionButton: UIButton!
     @IBOutlet weak var multiplicationButton: UIButton!
     @IBOutlet weak var squareRootButton: UIButton!
-
+    //Action buttons
+    @IBOutlet weak var enterButton: UIButton!
+    @IBOutlet weak var dotButton: UIButton!
+    @IBOutlet weak var clearButton: UIButton!
 
     private var calculator = CalculatorViewModel()
     private let disposableBag = DisposeBag()
@@ -21,40 +23,33 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        calculateAndUpdateDisplayWhenButtonClicked(self.additionButton, operation: .Addition)
+        calculateAndUpdateDisplayWhenButtonClicked(self.subtractionButton, operation: .Subtraction)
+        calculateAndUpdateDisplayWhenButtonClicked(self.divisionButton, operation: .Division)
+        calculateAndUpdateDisplayWhenButtonClicked(self.multiplicationButton, operation: .Multiplication)
+        calculateAndUpdateDisplayWhenButtonClicked(self.squareRootButton, operation: .SquareRoot)
+        
         self.enterButton.rx_tap.subscribeNext({ [weak self] _ in
             self?.calculator.enter()
             }).addDisposableTo(self.disposableBag)
 
-        self.additionButton.rx_tap.subscribeNext({[weak self] _ in
-            self?.calculator.calculate(.Addition)
-            self?.updateDisplay(self?.calculator.displayText)
+        self.dotButton.rx_tap.subscribeNext({ [weak self] _ in
+            if let text = self?.displayLabel.text {
+                if let text2 = self?.calculator.addDotToNumber(text) {
+                    self?.displayLabel.rx_text.onNext(text2)
+                }
+            }
             }).addDisposableTo(self.disposableBag)
 
-        self.subtractionButton.rx_tap.subscribeNext({[weak self] _ in
-            self?.calculator.calculate(.Subtraction)
-            self?.updateDisplay(self?.calculator.displayText)
-            }).addDisposableTo(self.disposableBag)
-
-        self.divisionButton.rx_tap.subscribeNext({[weak self] _ in
-            self?.calculator.calculate(.Division)
-            self?.updateDisplay(self?.calculator.displayText)
-            }).addDisposableTo(self.disposableBag)
-
-        self.multiplicationButton.rx_tap.subscribeNext({[weak self] _ in
-            self?.calculator.calculate(.Multiplication)
-            self?.updateDisplay(self?.calculator.displayText)
-            }).addDisposableTo(self.disposableBag)
-
-        self.squareRootButton.rx_tap.subscribeNext ({ [weak self] _ in
-
-            self?.calculator.calculate(.SquareRoot)
-            self?.updateDisplay(self?.calculator.displayText)
+        self.clearButton.rx_tap.subscribeNext ({ [weak self] _ in
+            self?.calculator.reset()
+            self?.updateDisplayText()
         }).addDisposableTo(self.disposableBag)
 
-        self.dotButton.rx_tap.subscribeNext({ [weak self] in
-            self?.updateDisplay(self?.calculator.addDotToNumber((self?.displayLabel.text!)!))
+        self.calculator.observableOptStack().subscribeNext ({ (array) in
+            self.operationDescriptionLabel.text = "\(array)"
+        }).addDisposableTo(self.disposableBag)
 
-            }).addDisposableTo(self.disposableBag)
     }
 
     @IBAction func appendNumber(sender: UIButton) {
@@ -64,12 +59,19 @@ class ViewController: UIViewController {
         }
 
         self.calculator.appendNumber(number)
-        displayLabel.rx_text.onNext(self.calculator.displayText)
+        updateDisplayText()
     }
 
-    func updateDisplay(text: String?) {
-        if let text = text {
+    func updateDisplayText() {
+        if let text = self.calculator.displayTextString() {
             self.displayLabel.rx_text.onNext(text)
         }
+    }
+    
+    func calculateAndUpdateDisplayWhenButtonClicked(button: UIButton, operation: CalculatorViewModel.Operation) {
+        button.rx_tap.subscribeNext ({ [weak self] _ in
+            self?.calculator.calculate(operation)
+            self?.updateDisplayText()
+        }).addDisposableTo(self.disposableBag)
     }
 }
