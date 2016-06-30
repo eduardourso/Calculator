@@ -31,6 +31,9 @@ class ViewController: UIViewController {
         calculateAndUpdateDisplayWhenButtonClicked(self.divisionButton, operation: .Division)
         calculateAndUpdateDisplayWhenButtonClicked(self.multiplicationButton, operation: .Multiplication)
         calculateAndUpdateDisplayWhenButtonClicked(self.squareRootButton, operation: .SquareRoot)
+        calculateAndUpdateDisplayWhenButtonClicked(self.cosButton, operation: .Cos)
+        calculateAndUpdateDisplayWhenButtonClicked(self.sinButton, operation: .Sin)
+        calculateAndUpdateDisplayWhenButtonClicked(self.piButton, operation: .Pi)
         
         self.enterButton.rx_tap.subscribeNext({ [weak self] _ in
             self?.calculator.enter()
