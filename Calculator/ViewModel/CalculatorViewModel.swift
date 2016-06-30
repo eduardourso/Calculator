@@ -10,6 +10,9 @@ public class CalculatorViewModel : CalculatorOperationsProtocol {
         case Multiplication
         case Division
         case SquareRoot
+        case Sin
+        case Cos
+        case Pi
     }
     
     private let displayText: BehaviorSubject<String> = BehaviorSubject(value: "")
@@ -37,6 +40,9 @@ public class CalculatorViewModel : CalculatorOperationsProtocol {
         knownOps[.Subtraction] = Op.BinaryOperation("-") {$1 - $0}
         knownOps[.Addition] = Op.BinaryOperation("+", +)
         knownOps[.SquareRoot] = Op.UnaryOperation("√", sqrt)
+        knownOps[.Sin] = Op.UnaryOperation("sin", sin)
+        knownOps[.Cos] = Op.UnaryOperation("cos", cos)
+        knownOps[.Pi] = Op.EmptyOperation("π", M_PI)
     }
 
     func appendNumber(number: String) {

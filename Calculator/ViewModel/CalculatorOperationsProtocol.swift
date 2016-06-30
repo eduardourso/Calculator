@@ -4,6 +4,7 @@ enum Op : CustomStringConvertible {
     case Operand(Double)
     case UnaryOperation(String, Double -> Double)
     case BinaryOperation(String, (Double, Double) -> Double)
+    case EmptyOperation(String, Double)
 
     var description: String {
         get {
@@ -13,6 +14,8 @@ enum Op : CustomStringConvertible {
             case .UnaryOperation(let symbol, _):
                 return symbol
             case .BinaryOperation(let symbol, _):
+                return symbol
+            case .EmptyOperation(let symbol, _):
                 return symbol
             }
         }
@@ -27,7 +30,7 @@ protocol CalculatorOperationsProtocol {
 extension CalculatorOperationsProtocol {
 
     func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Op]) {
-
+        
         if !ops.isEmpty {
             var remainingOps = ops
             let op = remainingOps.removeLast()
@@ -47,6 +50,8 @@ extension CalculatorOperationsProtocol {
                         return (operation(operand1, operand2), operandEvaluation2.remainingOps)
                     }
                 }
+            case .EmptyOperation(_, let operation):
+                return (operation, remainingOps)
             }
         }
         return(nil, ops)
